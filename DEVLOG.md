@@ -36,4 +36,69 @@ Another issue occurred when running `app.py`, because the starter files had not 
 
 **Status:** Passed.
 
+## Development Entry 2 – 9 November 2026
+
+### Task: Local Dataset Management
+
+**Work completed:**
+- Updated the existing `DataVisualiser` class.
+- Modified `load_csv()` to return a Boolean indicating whether loading succeeded.
+- Added `append_csv()` to append records from another CSV file.
+- Added column validation to prevent incompatible datasets from being combined.
+- Added `get_data()` to retrieve the currently loaded dataset.
+- Preserved the tutor's original graphing functionality.
+
+### Challenges Encountered
+
+When testing the updated application, Python could not find the Matplotlib module. I checked the Python environment and resolved the dependency issue. After this, the application displayed the original graph successfully.
+
+### Design Decisions
+
+I decided to extend the existing `DataVisualiser` class rather than create a separate class for dataset management. This allows the same class to manage the currently loaded data while keeping file operations in `FileManager`.
+
+I also added a check to compare CSV column names before appending data, to avoid combining datasets with different structures.
+
+### Testing
+
+**Test 1: Original graph**
+
+Expected result: The original population graph displays correctly.
+
+Actual result: The graph displayed successfully.
+
+Status: Passed.
+
+**Test 2: Append CSV data**
+
+Expected result: Appending the same CSV file increases the number of records from 15 to 30.
+
+Actual result:
+- Initial records: 15
+- Records after append: 30
+
+Status: Passed.
+
+**Test 3: Load a nonexistent CSV file**
+
+Expected result: The application handles the missing file without crashing, returns `False`, and keeps the dataset empty.
+
+Actual result:
+- The file manager displayed a file-not-found error.
+- `load_csv()` returned `False`.
+- The dataset contained 0 records.
+
+Status: Passed.
+
+**Test 4: Append a CSV file with incompatible columns**
+
+Expected result: The application rejects the incompatible CSV file and preserves the existing dataset.
+
+Actual result:
+- Initial records: 15
+- The application displayed "The CSV columns do not match."
+- `append_csv()` returned `False`.
+- Records after append: 15
+
+Status: Passed.
+
 ## Final Reflection

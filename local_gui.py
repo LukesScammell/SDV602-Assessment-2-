@@ -7,17 +7,9 @@ class LocalGUI:
         sg.theme("DarkBlue3")
 
         self.layout = [
-            [
-                sg.Text(
-                    "Local Data Explorer",
-                    font=("Arial", 20)
-                )
-            ],
-            [
-                sg.Text(
-                    "Welcome to the Local Data Explorer."
-                )
-            ]
+            [sg.Text("Local Data Explorer", font=("Arial", 20))],
+            [sg.Text("Welcome to the Local Data Explorer.", key="-STATUS-")],
+            [sg.Button("Load CSV", key="-LOAD-"), sg.Button("Show Graph", key="-GRAPH-"), sg.Button("Exit", key="-EXIT-")]
         ]
 
         self.window = sg.Window(
@@ -28,11 +20,21 @@ class LocalGUI:
         )
 
     def run(self):
-        """Keep the window open until the user closes it."""
+        """Handle events from the Local Data Explorer window."""
         while True:
             event, values = self.window.read()
 
-            if event == sg.WIN_CLOSED:
+            if event in (sg.WIN_CLOSED, "-EXIT-"):
                 break
+
+            if event == "-LOAD-":
+                self.window["-STATUS-"].update(
+                    "Load CSV button clicked."
+                )
+
+            if event == "-GRAPH-":
+                self.window["-STATUS-"].update(
+                    "Show Graph button clicked."
+                )
 
         self.window.close()

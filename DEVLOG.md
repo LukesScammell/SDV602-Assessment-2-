@@ -101,4 +101,47 @@ Actual result:
 
 Status: Passed.
 
+## Development Entry 3 – 9 November 2026
+
+### Task: Basic Local Data Explorer GUI
+
+**Work completed:**
+- Created `local_gui.py` using FreeSimpleGUI.
+- Implemented the `LocalGUI` class to manage the graphical interface.
+- Added a basic layout containing a heading and welcome message.
+- Created the application window using `sg.Window()`.
+- Added a `run()` method containing the event loop.
+- Updated `app.py` to launch the Local GUI.
+- Committed the initial GUI implementation to Git.
+
+### Challenges Encountered
+
+No major issues were encountered during the initial GUI implementation.
+
+### Design Decisions
+
+I decided to create a separate `LocalGUI` class rather than place the interface code directly inside `app.py`.
+
+This keeps the application's entry point separate from the GUI implementation and makes it easier to add new features without changing the main application file.
+
+I also started with a basic window before adding CSV loading, graphing and other functionality so that each feature could be developed and tested individually.
+
+### Testing
+
+**Test 1: Launch the Local GUI**
+
+Expected result: Running `python app.py` opens the Local Data Explorer window.
+
+Actual result: The application opened the FreeSimpleGUI window successfully.
+
+Status: Passed.
+
+**Test 2: Close the Local GUI**
+
+Expected result: Closing the window ends the application without errors.
+
+Actual result: The window closed successfully.
+
+Status: Passed.
+
 ## Final Reflection

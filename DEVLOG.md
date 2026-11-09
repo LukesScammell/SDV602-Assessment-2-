@@ -202,4 +202,115 @@ Actual result: To be confirmed.
 
 Status: Pending.
 
+## Development Entry 5 – 9 November 2026
+
+### Task: Loading CSV Files Through the Local GUI
+
+**Work completed:**
+- Imported the existing `DataVisualiser` class into `local_gui.py`.
+- Created a `DataVisualiser` instance inside the `LocalGUI` class.
+- Added a `load_csv()` method to allow users to select a CSV file.
+- Used `sg.popup_get_file()` to open a file selection dialog.
+- Connected the Load CSV button to the new method.
+- Added a text element to display the selected dataset filename.
+- Updated the status message to display the number of records loaded.
+- Added handling for cancelled file selection and unsuccessful loading.
+
+### Challenges Encountered
+
+No major issues were encountered when implementing the CSV loading functionality.
+
+### Design Decisions
+
+I decided to reuse the existing `DataVisualiser.load_csv()` method instead of adding CSV processing directly to the GUI.
+
+This keeps the interface code separate from the dataset management functionality and avoids duplicating code.
+
+I also added a status message to provide feedback when a dataset is loaded successfully.
+
+### Testing
+
+**Test 1: Load a CSV File**
+
+Expected result: Selecting a valid CSV file loads the dataset and displays the filename and record count.
+
+Actual result: The CSV file loaded successfully, and the GUI displayed the dataset information.
+
+Status: Passed.
+
+**Test 2: Cancel File Selection**
+
+Expected result: Cancelling the file dialog leaves the application open without changing the dataset.
+
+Actual result: To be confirmed.
+
+Status: Pending.
+
+**Test 3: Load an Invalid CSV File**
+
+Expected result: If the dataset cannot be loaded, the application displays an error message without crashing.
+
+Actual result: To be confirmed.
+
+Status: Pending.
+
+## Development Entry 6 – 9 November 2026
+
+### Task: Append CSV Files Through the Local GUI
+
+**Work completed:**
+- Added an Append CSV button to the Local GUI.
+- Created an `append_csv()` method inside the `LocalGUI` class.
+- Connected the button to the existing `DataVisualiser.append_csv()` method.
+- Added validation to prevent appending before a dataset has been loaded.
+- Added a file selection dialog for choosing CSV files to append.
+- Updated the status message to display the total number of records after a successful append.
+- Added an error popup when the selected CSV cannot be appended.
+
+### Challenges Encountered
+
+While testing the append functionality, I initially thought the application had accepted a CSV file with incompatible columns. After checking the error message, I confirmed that the application correctly rejected the file.
+
+### Design Decisions
+
+I reused the existing `DataVisualiser.append_csv()` method instead of duplicating the CSV validation inside the GUI.
+
+This keeps dataset processing separate from the interface and allows the GUI to display feedback based on whether the operation succeeds.
+
+I also added a check to prevent users from appending records when no dataset has been loaded.
+
+### Testing
+
+**Test 1: Append CSV With Incompatible Columns**
+
+Expected result: The application rejects the incompatible CSV file and displays an error message.
+
+Actual result: The application displayed an error indicating that the CSV could not be appended.
+
+Status: Passed.
+
+**Test 2: Append Compatible CSV**
+
+Expected result: Appending the original population CSV increases the record count from 15 to 30.
+
+Actual result: To be confirmed.
+
+Status: Pending.
+
+**Test 3: Append Without Loading a Dataset**
+
+Expected result: The application displays an error asking the user to load a CSV first.
+
+Actual result: To be confirmed.
+
+Status: Pending.
+
+**Test 4: Cancel CSV Selection**
+
+Expected result: Cancelling the file selection leaves the current dataset unchanged.
+
+Actual result: To be confirmed.
+
+Status: Pending.
+
 ## Final Reflection

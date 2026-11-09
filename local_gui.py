@@ -13,7 +13,7 @@ class LocalGUI:
             [sg.Text("Local Data Explorer", font=("Arial", 20))],
             [sg.Text("Welcome to the Local Data Explorer.", key="-STATUS-")],
             [sg.Text("Dataset: No file loaded", key="-DATASET-")],
-            [sg.Button("Load CSV", key="-LOAD-"), sg.Button("Show Graph", key="-GRAPH-"), sg.Button("Exit", key="-EXIT-")]
+            [sg.Button("Load CSV", key="-LOAD-"), sg.Button("Append CSV", key="-APPEND-"), sg.Button("Show Graph", key="-GRAPH-"), sg.Button("Exit", key="-EXIT-")]
         ]
 
         self.window = sg.Window(
@@ -41,17 +41,43 @@ class LocalGUI:
         else:
             sg.popup_error("Unable to load the selected CSV file.")
 
+    def append_csv(self):
+        """Append records from another CSV file to the current dataset."""
+        if not self.visualiser.get_data():
+            sg.popup_error("Please load a CSV file before appending data.")
+            return
+
+        file_name = sg.popup_get_file(
+            "Select a CSV file to append",
+            file_types=(("CSV Files", "*.csv"),)
+        )
+
+        if not file_name:
+            return
+
+        if self.visualiser.append_csv(file_name):
+            records = len(self.visualiser.get_data())
+
+            self.window["-STATUS-"].update(
+                f"CSV appended successfully. Total records: {records}."
+            )
+        else:
+            sg.popup_error("Unable to append CSV. Check that the columns match.")
+
     def run(self):
         """Handle events from the Local Data Explorer window."""
         while True:
             event, values = self.window.read()
-            # If the exit button is pressed it will run this
+
             if event in (sg.WIN_CLOSED, "-EXIT-"):
                 break
-            # If the Load button is pressed it will run this which will load the csv that is selected 
+
             if event == "-LOAD-":
                 self.load_csv()
-                
+
+            if event == "-APPEND-":
+                self.append_csv()
+
             if event == "-GRAPH-":
                 self.window["-STATUS-"].update("Show Graph button clicked.")
 

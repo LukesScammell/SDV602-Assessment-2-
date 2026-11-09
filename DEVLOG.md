@@ -144,4 +144,62 @@ Actual result: The window closed successfully.
 
 Status: Passed.
 
+## Development Entry 4 – 9 November 2026
+
+### Task: Buttons and Event Handling
+
+**Work completed:**
+- Added Load CSV, Show Graph and Exit buttons to the Local GUI.
+- Assigned unique keys to each button so the application can identify which button was clicked.
+- Updated the `run()` method to handle button events.
+- Added a status message that changes when the Load CSV or Show Graph button is clicked.
+- Implemented the Exit button to close the application.
+- Kept the existing basic GUI layout and window functionality.
+
+### Challenges Encountered
+
+No major issues were encountered while implementing the buttons and event handling.
+
+### Design Decisions
+
+I decided to use FreeSimpleGUI event keys such as `-LOAD-`, `-GRAPH-` and `-EXIT-` to identify button interactions.
+
+I also kept the event handling inside the `run()` method because this is where the application continuously checks for user input.
+
+At this stage, the Load CSV and Show Graph buttons only updated the status message. Their actual functionality would be implemented in later development iterations.
+
+### Testing
+
+**Test 1: Load CSV Button**
+
+Expected result: Clicking Load CSV updates the status message.
+
+Actual result: To be confirmed.
+
+Status: Pending.
+
+**Test 2: Show Graph Button**
+
+Expected result: Clicking Show Graph updates the status message.
+
+Actual result: To be confirmed.
+
+Status: Pending.
+
+**Test 3: Exit Button**
+
+Expected result: Clicking Exit closes the application.
+
+Actual result: To be confirmed.
+
+Status: Pending.
+
+**Test 4: Window Close Button**
+
+Expected result: Clicking the window's X button closes the application without errors.
+
+Actual result: To be confirmed.
+
+Status: Pending.
+
 ## Final Reflection

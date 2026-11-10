@@ -313,4 +313,123 @@ Actual result: To be confirmed.
 
 Status: Pending.
 
+## Development Entry 7 – 10 November 2026
+
+### Task: Dataset Descriptions and Reusable Chart Generation
+
+**Work completed:**
+- Added a `get_dataset_description()` method to the `DataVisualiser` class.
+- Added functionality to retrieve the number of records and column names from the loaded dataset.
+- Added numerical statistics including minimum, maximum and average values.
+- Created a `create_line_chart()` method that generates and returns a Matplotlib figure.
+- Updated `plot_line_chart()` to reuse the new chart generation method.
+- Kept the existing CSV loading and appending functionality unchanged.
+
+### Challenges Encountered## Development Entry 7 – 10 November 2026
+
+### Task: Dataset Descriptions and Reusable Chart Generation
+
+**Work completed:**
+- Added a `get_dataset_description()` method to the `DataVisualiser` class.
+- Added functionality to retrieve the number of records and column names from the loaded dataset.
+- Added numerical statistics including minimum, maximum and average values.
+- Created a `create_line_chart()` method that generates and returns a Matplotlib figure.
+- Updated `plot_line_chart()` to reuse the new chart generation method.
+- Kept the existing CSV loading and appending functionality unchanged.
+
+### Challenges Encountered
+
+When running the initial test, Python displayed a `ModuleNotFoundError` for Matplotlib. I checked the Python interpreter and confirmed that Matplotlib was already installed in the project's `.venv` virtual environment.
+
+After using the correct environment, the test ran successfully.
+
+### Design Decisions
+
+I decided to separate chart generation from chart display by creating a `create_line_chart()` method.
+
+This allows the application to generate a Matplotlib figure that can later be embedded directly into the FreeSimpleGUI window instead of always opening a separate graph window.
+
+I also added dataset descriptions to the existing `DataVisualiser` class because it already manages the loaded dataset.
+
+### Testing
+
+**Test 1: Empty Dataset Description**
+
+Expected result: An empty dataset returns zero records, no columns and no statistics.
+
+Actual result: The method returned `{'records': 0, 'columns': [], 'statistics': {}}`.
+
+Status: Passed.
+
+**Test 2: Load CSV and Retrieve Dataset Description**
+
+Expected result: Loading the population CSV returns 15 records, three column names and numerical statistics.
+
+Actual result: The CSV loaded successfully and returned 15 records with the columns `Period`, `Births_Deaths_or_Natural_Increase` and `Count`. Numerical statistics were generated for `Period` and `Count`.
+
+Status: Passed.
+
+**Test 3: Create Matplotlib Figure**
+
+Expected result: The `create_line_chart()` method successfully generates a Matplotlib figure using the population dataset.
+
+Actual result: The method returned a figure successfully, and the test displayed `Figure created: True`.
+
+Status: Passed.
+
+**Test 4: Display Graph Through Local GUI**
+
+Expected result: The Local GUI displays the generated Matplotlib figure when the Show Graph button is clicked.
+
+Actual result: To be confirmed.
+
+Status: Pending.
+
+When running the initial test, Python displayed a `ModuleNotFoundError` for Matplotlib. I checked the Python interpreter and confirmed that Matplotlib was already installed in the project's `.venv` virtual environment.
+
+After using the correct environment, the test ran successfully.
+
+### Design Decisions
+
+I decided to separate chart generation from chart display by creating a `create_line_chart()` method.
+
+This allows the application to generate a Matplotlib figure that can later be embedded directly into the FreeSimpleGUI window instead of always opening a separate graph window.
+
+I also added dataset descriptions to the existing `DataVisualiser` class because it already manages the loaded dataset.
+
+### Testing
+
+**Test 1: Empty Dataset Description**
+
+Expected result: An empty dataset returns zero records, no columns and no statistics.
+
+Actual result: The method returned `{'records': 0, 'columns': [], 'statistics': {}}`.
+
+Status: Passed.
+
+**Test 2: Load CSV and Retrieve Dataset Description**
+
+Expected result: Loading the population CSV returns 15 records, three column names and numerical statistics.
+
+Actual result: The CSV loaded successfully and returned 15 records with the columns `Period`, `Births_Deaths_or_Natural_Increase` and `Count`. Numerical statistics were generated for `Period` and `Count`.
+
+Status: Passed.
+
+**Test 3: Create Matplotlib Figure**
+
+Expected result: The `create_line_chart()` method successfully generates a Matplotlib figure using the population dataset.
+
+Actual result: The method returned a figure successfully, and the test displayed `Figure created: True`.
+
+Status: Passed.
+
+**Test 4: Display Graph Through Local GUI**
+
+Expected result: The Local GUI displays the generated Matplotlib figure when the Show Graph button is clicked.
+
+Actual result: To be confirmed.
+
+Status: Pending.
+
+
 ## Final Reflection

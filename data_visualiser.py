@@ -3,12 +3,10 @@ import matplotlib.pyplot as plt
 
 
 class DataVisualiser:
-
     def __init__(self):
         self.file_manager = FileManager()
         self.data = []
 
-    
     def load_csv(self, file_name):
         """Load a CSV file and replace the current dataset."""
         data = self.file_manager.read_csv(file_name)
@@ -43,27 +41,90 @@ class DataVisualiser:
         """Return the currently loaded dataset."""
         return self.data
 
+    def get_dataset_description(self):
+        """Return record counts, column names and numerical statistics."""
+        if not self.data:
+            return {
+                "records": 0,
+                "columns": [],
+                "statistics": {}
+            }
+
+        columns = list(self.data[0].keys())
+        statistics = {}
+
+        for column in columns:
+            values = []
+
+            for row in self.data:
+                value = row.get(column, "")
+
+                if value is None or value.strip() == "":
+                    continue
+
+                try:
+                    values.append(float(value))
+                except ValueError:
+                    values = []
+                    break
+
+            if values:
+                statistics[column] = {
+                    "minimum": min(values),
+                    "maximum": max(values),
+                    "average": sum(values) / len(values)
+                }
+
+        return {
+            "records": len(self.data),
+            "columns": columns,
+            "statistics": statistics
+        }
+
+    def create_line_chart(self, x_key, y_key, title, series_key=None):
+        """Create and return a Matplotlib figure."""
+        if not self.data:
+            return None
+
+        series = {}
+
+        for row in self.data:
+            name = row.get(series_key) if series_key else "Data"
+            series.setdefault(name, []).append(row)
+
+        fig, ax = plt.subplots(figsize=(8, 5))
+
+        for name, rows in series.items():
+            rows = sorted(rows, key=lambda row: row[x_key])
+
+            x_values = [row[x_key] for row in rows]
+            y_values = [float(row[y_key]) for row in rows]
+
+            ax.plot(x_values, y_values, marker="o", label=name)
+
+        if series_key:
+            ax.legend()
+
+        ax.set_xlabel(x_key)
+        ax.set_ylabel(y_key)
+        ax.set_title(title)
+
+        fig.tight_layout()
+
+        return fig
 
     def plot_line_chart(self, x_key, y_key, title, series_key=None):
+        """Display a line chart in a separate Matplotlib window."""
         if not self.data:
             print("No data to plot!")
             return
 
-        series = {}
-        for row in self.data:
-            series.setdefault(row.get(series_key), []).append(row)
+        figure = self.create_line_chart(
+            x_key,
+            y_key,
+            title,
+            series_key
+        )
 
-        plt.figure(figsize=(8, 6))
-
-        for name, rows in series.items():
-            rows = sorted(rows, key=lambda r: r[x_key])
-            x_values = [row[x_key] for row in rows]
-            y_values = [float(row[y_key]) for row in rows]
-            plt.plot(x_values, y_values, marker='o', label=name)
-
-        if series_key:
-            plt.legend()
-        plt.xlabel(x_key)
-        plt.ylabel(y_key)
-        plt.title(title)
-        plt.show()
+        if figure is not None:
+            plt.show()

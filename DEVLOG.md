@@ -172,35 +172,35 @@ At this stage, the Load CSV and Show Graph buttons only updated the status messa
 
 **Test 1: Load CSV Button**
 
-Expected result: Clicking Load CSV updates the status message.
+Expected result: Clicking Load CSV responds to the user's input.
 
-Actual result: To be confirmed.
+Actual result: The Load CSV button responded successfully when tested in the current GUI.
 
-Status: Pending.
+Status: Passed.
 
 **Test 2: Show Graph Button**
 
-Expected result: Clicking Show Graph updates the status message.
+Expected result: Clicking Show Graph responds to the user's input.
 
-Actual result: To be confirmed.
+Actual result: The Show Graph button responded successfully when tested in the current GUI.
 
-Status: Pending.
+Status: Passed.
 
 **Test 3: Exit Button**
 
 Expected result: Clicking Exit closes the application.
 
-Actual result: To be confirmed.
+Actual result: The application closed successfully.
 
-Status: Pending.
+Status: Passed.
 
 **Test 4: Window Close Button**
 
 Expected result: Clicking the window's X button closes the application without errors.
 
-Actual result: To be confirmed.
+Actual result: The application closed successfully using the window's X button.
 
-Status: Pending.
+Status: Passed.
 
 ## Development Entry 5 – 9 November 2026
 
@@ -242,17 +242,10 @@ Status: Passed.
 
 Expected result: Cancelling the file dialog leaves the application open without changing the dataset.
 
-Actual result: To be confirmed.
+Actual result: Cancelling the file selection worked successfully.
 
-Status: Pending.
+Status: Passed.
 
-**Test 3: Load an Invalid CSV File**
-
-Expected result: If the dataset cannot be loaded, the application displays an error message without crashing.
-
-Actual result: To be confirmed.
-
-Status: Pending.
 
 ## Development Entry 6 – 9 November 2026
 
@@ -293,39 +286,19 @@ Status: Passed.
 
 Expected result: Appending the original population CSV increases the record count from 15 to 30.
 
-Actual result: To be confirmed.
+Actual result: The application successfully appended the compatible CSV, increasing the record count from 15 to 30.
 
-Status: Pending.
+Status: Passed.
 
-**Test 3: Append Without Loading a Dataset**
-
-Expected result: The application displays an error asking the user to load a CSV first.
-
-Actual result: To be confirmed.
-
-Status: Pending.
-
-**Test 4: Cancel CSV Selection**
+**Test 3: Cancel CSV Selection**
 
 Expected result: Cancelling the file selection leaves the current dataset unchanged.
 
-Actual result: To be confirmed.
+Actual result: Cancelling the append file selection worked successfully.
 
-Status: Pending.
+Status: Passed.
 
 ## Development Entry 7 – 10 November 2026
-
-### Task: Dataset Descriptions and Reusable Chart Generation
-
-**Work completed:**
-- Added a `get_dataset_description()` method to the `DataVisualiser` class.
-- Added functionality to retrieve the number of records and column names from the loaded dataset.
-- Added numerical statistics including minimum, maximum and average values.
-- Created a `create_line_chart()` method that generates and returns a Matplotlib figure.
-- Updated `plot_line_chart()` to reuse the new chart generation method.
-- Kept the existing CSV loading and appending functionality unchanged.
-
-### Challenges Encountered## Development Entry 7 – 10 November 2026
 
 ### Task: Dataset Descriptions and Reusable Chart Generation
 
@@ -377,59 +350,67 @@ Actual result: The method returned a figure successfully, and the test displayed
 
 Status: Passed.
 
-**Test 4: Display Graph Through Local GUI**
+## Development Entry 8 – 13 November 2026
 
-Expected result: The Local GUI displays the generated Matplotlib figure when the Show Graph button is clicked.
+### Task: Embedded Matplotlib Graphs in Local GUI
 
-Actual result: To be confirmed.
+**Work completed:**
+- Rewrote some parts of the devlog document
+- Added a Matplotlib canvas to the FreeSimpleGUI window.
+- Implemented the `show_graph()` method to display graphs directly inside the application.
+- Connected the Show Graph button to the new method.
+- Implemented `clear_graph()` to remove previously displayed graphs.
+- Updated CSV loading and appending to clear outdated graphs.
+- Added error handling for missing datasets, required columns and graph generation failures.
 
-Status: Pending.
+### Challenges Encountered
 
-When running the initial test, Python displayed a `ModuleNotFoundError` for Matplotlib. I checked the Python interpreter and confirmed that Matplotlib was already installed in the project's `.venv` virtual environment.
+The original Show Graph button only updated the status message and did not display a graph.
 
-After using the correct environment, the test ran successfully.
+To resolve this, `FigureCanvasTkAgg` was used to embed the Matplotlib figure inside the FreeSimpleGUI canvas.
+
+Another consideration was preventing multiple graphs from stacking when the Show Graph button was clicked repeatedly.
 
 ### Design Decisions
 
-I decided to separate chart generation from chart display by creating a `create_line_chart()` method.
+I decided to display the graph inside the main application rather than opening a separate Matplotlib window.
 
-This allows the application to generate a Matplotlib figure that can later be embedded directly into the FreeSimpleGUI window instead of always opening a separate graph window.
+A separate `clear_graph()` method was created to manage existing figures and prevent outdated graphs from remaining visible after the dataset changes.
 
-I also added dataset descriptions to the existing `DataVisualiser` class because it already manages the loaded dataset.
+I reused the existing `create_line_chart()` method in `data_visualiser.py` to keep graph generation separate from the GUI.
+
+The graph currently uses the `Period` and `Count` columns from the population dataset. Allowing users to select different columns will be implemented in a later development iteration.
 
 ### Testing
 
-**Test 1: Empty Dataset Description**
+**Test 1: Display Embedded Graph**
 
-Expected result: An empty dataset returns zero records, no columns and no statistics.
+Expected result: After loading the population CSV and clicking Show Graph, the graph should appear inside the application window.
 
-Actual result: The method returned `{'records': 0, 'columns': [], 'statistics': {}}`.
-
-Status: Passed.
-
-**Test 2: Load CSV and Retrieve Dataset Description**
-
-Expected result: Loading the population CSV returns 15 records, three column names and numerical statistics.
-
-Actual result: The CSV loaded successfully and returned 15 records with the columns `Period`, `Births_Deaths_or_Natural_Increase` and `Count`. Numerical statistics were generated for `Period` and `Count`.
+Actual result: The embedded graph displayed successfully inside the Local Data Explorer window.
 
 Status: Passed.
 
-**Test 3: Create Matplotlib Figure**
+**Test 2: Graph Replacement**
 
-Expected result: The `create_line_chart()` method successfully generates a Matplotlib figure using the population dataset.
+Expected result: Clicking Show Graph again should replace the existing graph rather than creating multiple graphs.
 
-Actual result: The method returned a figure successfully, and the test displayed `Figure created: True`.
+Actual result: Clicking Show Graph multiple times successfully replaced the existing graph without creating duplicates.
 
 Status: Passed.
 
-**Test 4: Display Graph Through Local GUI**
+**Test 3: Clear Graph After Dataset Change**
 
-Expected result: The Local GUI displays the generated Matplotlib figure when the Show Graph button is clicked.
+Expected result: Loading or appending CSV data should clear the previously displayed graph.
 
-Actual result: To be confirmed.
+Actual result: The graph was cleared successfully after changing the dataset.
 
-Status: Pending.
+Status: Passed.
 
+**Test 4: Show Graph Without Dataset**
 
-## Final Reflection
+Expected result: An error message should appear when Show Graph is clicked without loading a CSV file.
+
+Actual result: The application successfully displayed an error popup when no dataset was loaded.
+
+Status: Passed.

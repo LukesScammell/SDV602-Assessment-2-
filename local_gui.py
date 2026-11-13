@@ -18,6 +18,7 @@ class LocalGUI:
             [sg.Text("Local Data Explorer", font=("Arial", 20))],
             [sg.Text("Welcome to the Local Data Explorer.", key="-STATUS-")],
             [sg.Text("Dataset: No file loaded", key="-DATASET-")],
+            [sg.Multiline("No dataset information available.", key="-DESCRIPTION-", size=(85, 5), disabled=True, autoscroll=True, horizontal_scroll=True, expand_x=True)],
 
             [sg.Button("Load CSV", key="-LOAD-"), sg.Button("Append CSV", key="-APPEND-"), sg.Button("Show Graph", key="-GRAPH-"), sg.Button("Exit", key="-EXIT-")],
 
@@ -28,7 +29,7 @@ class LocalGUI:
         self.window = sg.Window(
             "SDV602 - Local Data Explorer",
             self.layout,
-            size=(850, 550),
+            size=(850, 650),
             finalize=True
         )
 
@@ -47,6 +48,33 @@ class LocalGUI:
             plt.close(self.figure)
             self.figure = None
 
+    def update_dataset_description(self):
+        """Display information about the currently loaded dataset."""
+        description = self.visualiser.get_dataset_description()
+
+        if description["records"] == 0: 
+            self.window["-DESCRIPTION-"].update(
+                "No dataset information available."
+            ) 
+            return
+
+        records = description["records"]
+        columns = ", ".join(description["columns"])
+
+        lines = [
+            f"Total records: {records}", 
+            f"Columns: {columns}"
+        ]
+
+        for column, stats in description["statistics"].items():
+            lines.append(f"{column}: "
+                f"Min = {stats['minimum']:.2f}, "
+                f"Max = {stats['maximum']:.2f}, "
+                f"Average = {stats['average']:.2f}"
+            )
+        
+        self.window["-DESCRIPTION-"].update("\n".join(lines)) 
+
     def load_csv(self):
         """Allow the user to select and load a CSV file."""
         file_name = sg.popup_get_file(
@@ -62,6 +90,8 @@ class LocalGUI:
 
             self.clear_graph()
             self.window["-DATASET-"].update(f"Dataset: {file_name}")
+            self.update_dataset_description()
+
             self.window["-STATUS-"].update(f"Successfully loaded {records} records.")
         else:
             sg.popup_error("Unable to load the selected CSV file.")
@@ -84,6 +114,7 @@ class LocalGUI:
             records = len(self.visualiser.get_data())
 
             self.clear_graph()
+            self.update_dataset_description()
             self.window["-STATUS-"].update(
                 f"CSV appended successfully. Total records: {records}."
             )

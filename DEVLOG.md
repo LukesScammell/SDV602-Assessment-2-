@@ -468,3 +468,63 @@ Actual result: The pan controls worked successfully.
 
 Status: Passed.
 
+## Development Entry 10 – 14 November 2026
+
+### Task: Display Dataset Descriptions in Local GUI
+
+**Work completed:**
+- Connected the existing `get_dataset_description()` method from `data_visualiser.py` to the Local GUI.
+- Added a dataset description section to the FreeSimpleGUI interface.
+- Implemented `update_dataset_description()` to display information about the loaded dataset.
+- Displayed the total number of records, column names and numerical statistics.
+- Updated the CSV loading functionality to refresh the dataset description.
+- Updated the CSV append functionality to refresh the description when additional records are added.
+- Replaced the original text description with a scrollable, read-only `sg.Multiline` element.
+- Preserved the existing embedded Matplotlib graph and navigation toolbar functionality.
+
+### Challenges Encountered
+
+The original dataset description was displayed using a `sg.Text` element, which made longer column names and numerical statistics difficult to read.
+
+I replaced this with a scrollable `sg.Multiline` element to improve readability and allow more information to be displayed without taking up too much space in the interface.
+
+### Design Decisions
+
+I decided to reuse the existing `get_dataset_description()` method rather than calculate dataset statistics directly in the GUI. This keeps the data processing functionality separate from the user interface.
+
+I also used a read-only multiline element to prevent users from accidentally editing the displayed dataset information. The dataset description automatically refreshes when CSV files are loaded or appended, ensuring that the displayed information reflects the current dataset.
+
+### Testing
+
+**Test 1: Display Dataset Description**
+
+Expected result: Loading a CSV file displays the record count, column names and numerical statistics.
+
+Actual result: The dataset description displayed successfully.
+
+Status: Passed.
+
+**Test 2: Dataset Description Readability**
+
+Expected result: Longer dataset descriptions can be viewed without text being cut off.
+
+Actual result: The scrollable description area displayed the information correctly.
+
+Status: Passed.
+
+**Test 3: Update Description After Appending CSV**
+
+Expected result: Appending compatible CSV data updates the record count and numerical statistics.
+
+Actual result: The dataset description updated successfully after appending data.
+
+Status: Passed.
+
+**Test 4: Embedded Graph Compatibility**
+
+Expected result: The embedded graph and Matplotlib navigation toolbar continue functioning after adding dataset descriptions.
+
+Actual result: The graph and navigation toolbar continued working correctly.
+
+Status: Passed.
+

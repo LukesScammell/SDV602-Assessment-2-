@@ -414,3 +414,57 @@ Expected result: An error message should appear when Show Graph is clicked witho
 Actual result: The application successfully displayed an error popup when no dataset was loaded.
 
 Status: Passed.
+
+## Development Entry 9 – 14 November 2026
+
+### Task: Matplotlib Zoom and Pan Controls
+
+**Work completed:**
+- Imported `NavigationToolbar2Tk` from Matplotlib.
+- Added a separate toolbar canvas to the FreeSimpleGUI layout.
+- Added a `toolbar` attribute to the `LocalGUI` class.
+- Updated `show_graph()` to display the Matplotlib navigation toolbar above the embedded graph.
+- Updated `clear_graph()` to remove the existing toolbar when clearing a graph.
+- Added access to zoom, pan, Home, Back, Forward and Save controls.
+- Preserved the existing CSV loading, appending and graph display functionality.
+
+### Challenges Encountered
+
+The existing Local GUI displayed Matplotlib graphs but did not provide controls for interacting with them.
+
+To resolve this, I used `NavigationToolbar2Tk` to add Matplotlib's built-in navigation tools directly into the FreeSimpleGUI window.
+
+I also needed to ensure that the toolbar was removed when a graph was cleared or replaced, preventing duplicate toolbars from appearing.
+
+### Design Decisions
+
+I decided to use Matplotlib's existing navigation toolbar instead of creating custom zoom and pan buttons. This provides standard graph navigation functionality while keeping the implementation simple.
+
+I placed the toolbar in a separate canvas above the graph to keep the interface organised. I also updated the existing `clear_graph()` method to manage both the graph and toolbar, keeping the cleanup functionality in one place.
+
+### Testing
+
+**Test 1: Display Navigation Toolbar**
+
+Expected result: After loading a CSV and clicking Show Graph, the navigation toolbar appears above the embedded graph.
+
+Actual result: The navigation toolbar displayed successfully.
+
+Status: Passed.
+
+**Test 2: Zoom Functionality**
+
+Expected result: Selecting Zoom allows the user to zoom into a specific area of the graph.
+
+Actual result: The zoom controls worked successfully.
+
+Status: Passed.
+
+**Test 3: Pan Functionality**
+
+Expected result: Selecting Pan allows the user to move around the graph.
+
+Actual result: The pan controls worked successfully.
+
+Status: Passed.
+

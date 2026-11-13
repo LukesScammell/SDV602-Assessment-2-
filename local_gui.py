@@ -1,6 +1,6 @@
 import FreeSimpleGUI as sg
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, NavigationToolbar2Tk,)
 from data_visualiser import DataVisualiser
 
 
@@ -12,12 +12,16 @@ class LocalGUI:
         self.visualiser = DataVisualiser()
         self.figure = None
         self.figure_canvas = None
+        self.toolbar = None
 
         self.layout = [
             [sg.Text("Local Data Explorer", font=("Arial", 20))],
             [sg.Text("Welcome to the Local Data Explorer.", key="-STATUS-")],
             [sg.Text("Dataset: No file loaded", key="-DATASET-")],
+
             [sg.Button("Load CSV", key="-LOAD-"), sg.Button("Append CSV", key="-APPEND-"), sg.Button("Show Graph", key="-GRAPH-"), sg.Button("Exit", key="-EXIT-")],
+
+            [sg.Canvas(key="-TOOLBAR-", size=(760, 40))],
             [sg.Canvas(key="-CANVAS-", size=(760, 350))]
         ]
 
@@ -30,6 +34,11 @@ class LocalGUI:
 
     def clear_graph(self):
         """Remove the currently displayed graph."""
+
+        if self.toolbar is not None:
+            self.toolbar.destroy()
+            self.toolbar = None
+
         if self.figure_canvas is not None:
             self.figure_canvas.get_tk_widget().destroy()
             self.figure_canvas = None
@@ -111,9 +120,16 @@ class LocalGUI:
             return
 
         canvas = self.window["-CANVAS-"].TKCanvas
+
         self.figure_canvas = FigureCanvasTkAgg(self.figure, master=canvas)
         self.figure_canvas.draw()
         self.figure_canvas.get_tk_widget().pack(side="top", fill="both", expand=True)
+
+        toolbar_canvas = self.window["-TOOLBAR-"].TKCanvas
+
+        self.toolbar = NavigationToolbar2Tk(self.figure_canvas, toolbar_canvas, pack_toolbar=False)
+        self.toolbar.update() 
+        self.toolbar.pack(side="left", fill="x")
 
         self.window["-STATUS-"].update("Graph displayed successfully.")
 

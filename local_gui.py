@@ -22,6 +22,8 @@ class LocalGUI:
 
             [sg.Button("Load CSV", key="-LOAD-"), sg.Button("Append CSV", key="-APPEND-"), sg.Button("Show Graph", key="-GRAPH-"), sg.Button("Exit", key="-EXIT-")],
 
+            [sg.Text("X-axis:"), sg.Combo(values=[], key="-X-COLUMN-", size=(25, 1), readonly=True), sg.Text("Y-axis:"), sg.Combo(values=[], key="-Y-COLUMN-", size=(25, 1), readonly=True)],
+
             [sg.Canvas(key="-TOOLBAR-", size=(760, 40))],
             [sg.Canvas(key="-CANVAS-", size=(760, 350))]
         ]
@@ -48,6 +50,30 @@ class LocalGUI:
             plt.close(self.figure)
             self.figure = None
 
+    def update_column_selection(self):
+        """Update graph column dropdowns using the loaded dataset."""
+        data = self.visualiser.get_data()
+
+        if not data: 
+            self.window["-X-COLUMN-"].update(values=[], value="")
+            self.window["-Y-COLUMN-"].update(values=[], value="")
+            return
+
+        columns = list(data[0].keys())
+
+        x_default = "Period" if "Period" in columns else columns[0]
+        y_default = "Count" if "Count" in columns else columns[-1]
+
+        self.window["-X-COLUMN-"].update(
+            values=columns,
+            value=x_default,
+        )
+
+        self.window["-Y-COLUMN-"].update(
+            values=columns,
+            value=y_default,
+        )
+        
     def update_dataset_description(self):
         """Display information about the currently loaded dataset."""
         description = self.visualiser.get_dataset_description()
@@ -91,6 +117,7 @@ class LocalGUI:
             self.clear_graph()
             self.window["-DATASET-"].update(f"Dataset: {file_name}")
             self.update_dataset_description()
+            self.update_column_selection()
 
             self.window["-STATUS-"].update(f"Successfully loaded {records} records.")
         else:
@@ -123,25 +150,42 @@ class LocalGUI:
 
     def show_graph(self):
         """Display the loaded dataset as an embedded Matplotlib graph."""
-        if not self.visualiser.get_data():
+        data= self.visualiser.get_data()
+
+        if not data:
             sg.popup_error("Please load a CSV file before displaying a graph.")
             return
 
-        columns = self.visualiser.get_data()[0].keys()
+        x_column = self.window["-X-COLUMN-"].get()
+        y_column = self.window["-Y-COLUMN-"].get()
 
-        if not {"Period", "Count"}.issubset(columns):
+        if not x_column or not y_column:
             sg.popup_error("The dataset must contain Period and Count columns.")
             return
 
-        self.clear_graph()
+        try:
+            for row in data:
+                float(row[y_column])
+        except (ValueError, TypeError, KeyError):
+            sg.popup_error("The selected Y-axis column must contain numeric values.")
+            return
+        
+        self.clear_graph
 
         try:
             self.figure = self.visualiser.create_line_chart(
-                "Period",
-                "Count",
-                "Population Data",
-                "Births_Deaths_or_Natural_Increase" if "Births_Deaths_or_Natural_Increase" in columns else None
+                x_column,
+                y_column,
+                f"{y_column} by {x_column}",
+                (
+                    "Births_Deaths_or_Natural_Increase"
+                    if x_column == "Period"
+                    and y_column == "Count"
+                    and "Births_Deaths_or_Natural_Increase" in data[0]
+                    else None
+                ),
             )
+
         except (ValueError, KeyError, TypeError) as error:
             sg.popup_error(f"Unable to create graph: {error}")
             return
@@ -162,7 +206,7 @@ class LocalGUI:
         self.toolbar.update() 
         self.toolbar.pack(side="left", fill="x")
 
-        self.window["-STATUS-"].update("Graph displayed successfully.")
+        self.window["-STATUS-"].update(f"Graph displayed: {y_column} by {x_column}.")
 
     def run(self):
         """Handle events from the Local Data Explorer window."""

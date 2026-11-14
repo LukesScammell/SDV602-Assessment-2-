@@ -528,3 +528,65 @@ Actual result: The graph and navigation toolbar continued working correctly.
 
 Status: Passed.
 
+## Development Entry 11 – 14 November 2026
+
+### Task: Dynamic Graph Column Selection
+
+**Work completed:**
+- Added X-axis and Y-axis dropdown menus to the Local Data Explorer.
+- Implemented `update_column_selection()` to populate the dropdowns using the loaded CSV column names.
+- Configured the population dataset to automatically select `Period` for the X-axis and `Count` for the Y-axis.
+- Updated `load_csv()` to refresh the available graph columns when a new dataset is loaded.
+- Updated `show_graph()` to use the selected X-axis and Y-axis columns instead of fixed column names.
+- Added validation to check that the selected Y-axis contains numerical values.
+- Preserved the existing population graph series grouping when using the original columns.
+- Maintained compatibility with the embedded Matplotlib graph and navigation toolbar.
+
+### Challenges Encountered
+
+While implementing the dropdown menus, I encountered an `AttributeError` because I initially used `sg.text()` instead of `sg.Text()`. I corrected the capitalisation to use the correct FreeSimpleGUI element.
+
+I also encountered a `TypeError` when checking whether the dataset was empty. This happened because I accidentally used `data()` instead of `data`, which attempted to call a Python list as a function.
+
+After correcting these issues, the application ran successfully.
+
+### Design Decisions
+
+I decided to populate the dropdown menus dynamically using the column names from the loaded CSV file.
+
+This allows the application to support datasets with different column structures without requiring changes to the graph generation code.
+
+I also retained the default `Period` and `Count` selections for the population dataset to preserve the original graph functionality.
+
+Numerical validation was added to prevent users from selecting unsuitable Y-axis data.
+
+### Testing
+
+**Test 1: Load CSV and Populate Dropdowns**
+
+Expected result: Loading a CSV file populates both dropdowns with the available column names.
+
+Actual result: The dropdowns populated successfully.
+
+Status: Passed.
+
+**Test 2: Default Column Selection**
+
+Expected result: Loading the population dataset automatically selects `Period` and `Count`.
+
+Actual result: The correct default columns were selected.
+
+Status: Passed.
+
+**Test 3: Generate Graph Using Selected Columns**
+
+Expected result: Clicking Show Graph generates a graph using the selected X-axis and Y-axis columns.
+
+Actual result: The graph displayed successfully.
+
+Status: Passed.
+
+
+
+
+

@@ -82,9 +82,14 @@ class DataVisualiser:
         }
 
     def create_line_chart(self, x_key, y_key, title, series_key=None):
-        """Create and return a Matplotlib figure."""
+        """Create a line chart with appropriate X-axis sorting."""
         if not self.data:
             return None
+
+        columns = self.data[0].keys()
+
+        if x_key not in columns or y_key not in columns:
+            raise KeyError("The selected graph columns do not exist.")
 
         series = {}
 
@@ -92,15 +97,34 @@ class DataVisualiser:
             name = row.get(series_key) if series_key else "Data"
             series.setdefault(name, []).append(row)
 
+        # Determine whether all X-axis values are numeric.
+        numeric_x = True
+
+        for row in self.data:
+            try:
+                float(row[x_key])
+            except (ValueError, TypeError):
+                numeric_x = False
+                break
+
         fig, ax = plt.subplots(figsize=(8, 5))
 
         for name, rows in series.items():
-            rows = sorted(rows, key=lambda row: row[x_key])
+            if numeric_x:
+                rows = sorted(rows, key=lambda row: float(row[x_key]))
+                x_values = [float(row[x_key]) for row in rows]
+            else:
+                rows = sorted(rows, key=lambda row: str(row[x_key]))
+                x_values = [row[x_key] for row in rows]
 
-            x_values = [row[x_key] for row in rows]
             y_values = [float(row[y_key]) for row in rows]
 
-            ax.plot(x_values, y_values, marker="o", label=name)
+            ax.plot(
+                x_values,
+                y_values,
+                marker="o",
+                label=name
+            )
 
         if series_key:
             ax.legend()

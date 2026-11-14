@@ -586,6 +586,86 @@ Actual result: The graph displayed successfully.
 
 Status: Passed.
 
+## Development Entry 12 – 14 November 2026
+
+### Task: Flexible CSV Graph Handling and Numerical Sorting
+
+**Work completed:**
+- Updated `create_line_chart()` in `data_visualiser.py` to support numerical and text-based X-axis values.
+- Added validation to check that the selected X-axis and Y-axis columns exist in the dataset.
+- Implemented automatic detection of numerical X-axis values.
+- Added numerical sorting to ensure values such as 1, 2, 3, 10 and 20 appear in the correct order.
+- Preserved alphabetical sorting for text-based X-axis values.
+- Maintained support for multiple graph series.
+- Created `data/test_numeric_sorting.csv` to test numerical sorting.
+- Confirmed compatibility with dynamic graph column selection and the existing Matplotlib navigation toolbar.
+
+### Challenges Encountered
+
+The original graph generation method sorted all X-axis values as strings. This caused numerical values to appear in alphabetical order rather than numerical order.
+
+For example, the values 1, 10, 2, 20 and 3 were sorted incorrectly.
+
+To resolve this, I added a check to determine whether all X-axis values could be converted into floating-point numbers.
+
+When the values are numerical, the application now sorts them numerically. Otherwise, it uses alphabetical sorting.
+
+### Design Decisions
+
+I decided to implement the sorting functionality inside `data_visualiser.py` rather than `local_gui.py`. This keeps data processing separate from the graphical user interface and allows the same functionality to be reused elsewhere in the application.
+
+I also retained the existing `create_line_chart()` method instead of creating a separate method for numerical datasets. This allows the application to support different CSV structures without introducing unnecessary complexity.
+
+### Testing
+
+**Test 1: Original Population Dataset**
+
+Expected result: The population dataset continues to display correctly using Period and Count.
+
+Actual result: The population graph displayed successfully.
+
+Status: Passed.
+
+**Test 2: Numerical X-axis Sorting**
+
+Expected result: Numerical X-axis values are sorted in ascending numerical order.
+
+Actual result: The test dataset displayed the X-axis values in the correct numerical order.
+
+Status: Passed.
+
+**Test 3: Text-based X-axis Values**
+
+Expected result: Text-based X-axis values continue to display correctly.
+
+Actual result: The graph displayed text-based categories successfully.
+
+Status: Passed.
+
+**Test 4: Invalid Y-axis Data**
+
+Expected result: Selecting a non-numerical Y-axis displays an error popup instead of generating a graph.
+
+Actual result: The application displayed the expected error popup.
+
+Status: Passed.
+
+**Test 5: Matplotlib Navigation Toolbar**
+
+Expected result: Zoom, Pan and Home continue working with the updated graph generation method.
+
+Actual result: The navigation controls worked successfully.
+
+Status: Passed.
+
+**Test 6: Dynamic Column Selection**
+
+Expected result: Loading a different CSV file updates the available X-axis and Y-axis dropdown selections.
+
+Actual result: The dropdowns updated correctly for the new dataset.
+
+Status: Passed.
+
 
 
 

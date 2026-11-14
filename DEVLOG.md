@@ -757,5 +757,80 @@ Actual result: Both controls worked successfully.
 
 Status: Passed.
 
+## Development Entry 14 – 14 November 2026
 
+### Task: Remote Mode Setup and MongoDB Atlas Integration
 
+**Work completed:**
+- Updated `app.py` to support Local and Remote modes using command-line arguments.
+- Added `argparse` to allow users to select the application mode.
+- Preserved Local Mode as the default application mode.
+- Installed PyMongo and its required dependencies.
+- Configured the application to connect to MongoDB Atlas using an environment variable.
+- Connected the existing Remote Mode chat application to MongoDB Atlas.
+- Tested saving and retrieving chat messages from the database.
+- Verified saved chat messages using MongoDB Compass.
+
+### Challenges Encountered
+
+Initially, the application attempted to connect to a local MongoDB server on port 27017, resulting in a connection error. The application was then configured to use MongoDB Atlas.
+
+An invalid connection string also caused a PyMongo URI error. This was resolved by correcting the environment variable containing the MongoDB Atlas connection string.
+
+### Design Decisions
+
+- Used `argparse` to separate Local and Remote modes while keeping a single application entry point.
+- Kept Local Mode as the default to preserve existing functionality.
+- Used an environment variable to avoid storing MongoDB credentials directly in the source code.
+- Reused the teacher-provided database and chat classes rather than rewriting existing functionality.
+- Used MongoDB Atlas for remote database storage.
+
+### Testing
+
+**Test 1: Command-Line Help**
+
+Expected result: Display available application modes.
+
+Actual result: Both Local and Remote modes were displayed.
+
+Status: Passed.
+
+**Test 2: Local Mode**
+
+Expected result: `python app.py local` launches the Local Data Explorer.
+
+Actual result: The Local GUI opened successfully.
+
+Status: Passed.
+
+**Test 3: Default Mode**
+
+Expected result: `python app.py` launches Local Mode.
+
+Actual result: The Local GUI opened successfully.
+
+Status: Passed.
+
+**Test 4: MongoDB Atlas Connection**
+
+Expected result: Python successfully connects to MongoDB Atlas.
+
+Actual result: The database connection succeeded.
+
+Status: Passed.
+
+**Test 5: Save Chat Message**
+
+Expected result: A message sent through Remote Mode is saved in MongoDB.
+
+Actual result: The message was stored successfully and verified in MongoDB Compass.
+
+Status: Passed.
+
+**Test 6: Retrieve Chat Messages**
+
+Expected result: Previously saved messages appear when Remote Mode is restarted.
+
+Actual result: The previous message appeared after restarting the application.
+
+Status: Passed.

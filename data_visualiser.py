@@ -9,21 +9,33 @@ class DataVisualiser:
 
     def load_csv(self, file_name):
         """Load a CSV file and replace the current dataset."""
-        data = self.file_manager.read_csv(file_name)
+        data = self.read_csv_safely(file_name)
 
-        if not data:
-            print(f"No data loaded from file: {file_name}")
+        if data is None:
             return False
 
         self.data = data
         return True
+    
+    def read_csv_safely(self, file_name):
+        """Read a CSV file and handle common file errors."""
+        try:
+            data = self.file_manager.read_csv(file_name)
+        except (OSError, UnicodeError, ValueError) as error:
+            print(f"Unable to read CSV file: {error}")
+            return None
+
+        if not data:
+            print(f"No data loaded from file: {file_name}")
+            return None
+
+        return data
 
     def append_csv(self, file_name):
-        """Append records from another CSV file."""
-        new_data = self.file_manager.read_csv(file_name)
+        """Append records from a compatible CSV file."""
+        new_data = self.read_csv_safely(file_name)
 
-        if not new_data:
-            print(f"No data loaded from file: {file_name}")
+        if new_data is None:
             return False
 
         if self.data:

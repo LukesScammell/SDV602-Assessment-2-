@@ -666,7 +666,96 @@ Actual result: The dropdowns updated correctly for the new dataset.
 
 Status: Passed.
 
+## Development Entry 13 – 14 November 2026
 
+### Task: Local Mode Improvements and CSV Error Handling
+
+**Work completed:**
+- Added `read_csv_safely()` to `data_visualiser.py` to handle common CSV file errors.
+- Updated `load_csv()` to use the new error-handling method.
+- Updated `append_csv()` to use the same error-handling method while preserving column validation.
+- Ensured unsuccessful CSV loading does not replace the existing dataset.
+- Ensured incompatible CSV files cannot be appended to the current dataset.
+- Verified that switching between CSV datasets updates the displayed information and graph.
+- Confirmed that the existing graph navigation tools continue working.
+
+### Challenges Encountered
+
+The original CSV loading and appending methods handled empty datasets but relied on the file-reading functionality to manage other errors.
+
+I added a reusable helper method to handle common file-reading problems, including missing files, permission errors and invalid text encoding. This reduced repeated validation code in the loading and appending methods.
+
+### Design Decisions
+
+I decided to centralise CSV error handling in `read_csv_safely()` rather than implementing separate exception handling in both `load_csv()` and `append_csv()`.
+
+This makes the code easier to maintain and ensures both operations handle errors consistently. I also kept the existing dataset unchanged when a CSV file cannot be loaded successfully, preventing accidental data loss.
+
+### Testing
+
+**Test 1: Load Valid CSV**
+
+Expected result: A valid CSV file loads successfully.
+
+Actual result: The CSV file loaded correctly.
+
+Status: Passed.
+
+**Test 2: Switch Dataset**
+
+Expected result: Loading a different CSV replaces the existing dataset.
+
+Actual result: The previous dataset was replaced successfully.
+
+Status: Passed.
+
+**Test 3: Append Compatible CSV**
+
+Expected result: Compatible CSV records are appended to the current dataset.
+
+Actual result: Records were appended successfully.
+
+Status: Passed.
+
+**Test 4: Append Incompatible CSV**
+
+Expected result: An error appears and the existing dataset remains unchanged.
+
+Actual result: The incompatible CSV was rejected without changing the dataset.
+
+Status: Passed.
+
+**Test 5: Invalid or Missing CSV**
+
+Expected result: An error appears and the existing dataset remains unchanged.
+
+Actual result: The invalid file was rejected and the existing dataset was preserved.
+
+Status: Passed.
+
+**Test 6: Cancel File Selection**
+
+Expected result: Cancelling file selection does not modify the dataset.
+
+Actual result: The dataset remained unchanged.
+
+Status: Passed.
+
+**Test 7: Graph After Switching Datasets**
+
+Expected result: The graph displays information from the newly loaded dataset.
+
+Actual result: The graph displayed the correct dataset.
+
+Status: Passed.
+
+**Test 8: Graph Navigation Controls**
+
+Expected result: Zoom and Pan continue working after the CSV handling changes.
+
+Actual result: Both controls worked successfully.
+
+Status: Passed.
 
 
 

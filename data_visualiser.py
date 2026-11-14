@@ -16,7 +16,7 @@ class DataVisualiser:
 
         self.data = data
         return True
-    
+        
     def read_csv_safely(self, file_name):
         """Read a CSV file and handle common file errors."""
         try:

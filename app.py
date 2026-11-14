@@ -1,40 +1,24 @@
+from data.user_repository import UserRepository
+from data.message_repository import MessageRepository
 
-import argparse
-
-
-def run_local():
-    from local_gui import LocalGUI
-
-    local_gui = LocalGUI()
-    local_gui.run()
+from controller.login_controller import LoginController
+from controller.chat_controller import ChatController
 
 
-def run_remote():
-    from chat_app import run
+class App:
+    def __init__(self):
+        self.user_repository = UserRepository()
+        self.message_repository = MessageRepository()
 
-    run()
+    def run(self):
+        user = LoginController(self.user_repository).run()
 
-
-def main():
-    parser = argparse.ArgumentParser(
-        description="SDV602 Data Exploration System"
-    )
-
-    parser.add_argument(
-        "mode",
-        nargs="?",
-        choices=["local", "remote"],
-        default="local",
-        help="Choose local or remote mode (default: local)"
-    )
-
-    args = parser.parse_args()
-
-    if args.mode == "local":
-        run_local()
-    elif args.mode == "remote":
-        run_remote()
-
+        if user:
+            ChatController(user.name, self.message_repository).run()
+            pass
+        
+        else: 
+            print(user)
 
 if __name__ == "__main__":
-    main()
+    App().run()

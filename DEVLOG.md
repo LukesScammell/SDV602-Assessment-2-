@@ -834,3 +834,63 @@ Expected result: Previously saved messages appear when Remote Mode is restarted.
 Actual result: The previous message appeared after restarting the application.
 
 Status: Passed.
+
+## Development Entry 15 – 14 November 2026
+
+### Task: User Registration, Login and Chat Integration
+
+**Work completed:**
+- Implemented user registration and login functionality for Remote Mode.
+- Connected user account functionality to MongoDB Atlas.
+- Organised the application using separate controller, data, model and view modules.
+- Used repository classes to separate database operations from application logic.
+- Integrated the chat interface with the authenticated user account.
+- Enabled registered users to log back into their accounts after restarting the application.
+
+### Challenges Encountered
+
+During development, MongoDB authentication errors prevented the application from connecting successfully. The connection configuration and database credentials were investigated.
+
+An issue was also identified in the chat controller where the `ChatView` class was referenced without creating an instance. This was corrected by initialising the view using `ChatView()`.
+
+### Design Decisions
+
+The application was organised into separate modules to make the code easier to maintain and follow the structure demonstrated by the tutor.
+
+MongoDB Atlas was retained for persistent user data, and the existing `sdv602_des` database was used.
+
+The chat functionality was connected to the authenticated user so that users could communicate using their registered accounts.
+
+### Testing
+
+**Test 1: User Registration**
+
+Expected result: A new user can register an account.
+
+Actual result: Registration completed successfully.
+
+Status: Passed.
+
+**Test 2: User Login**
+
+Expected result: A registered user can log in using their account.
+
+Actual result: Login completed successfully.
+
+Status: Passed.
+
+**Test 3: Account Persistence**
+
+Expected result: A registered user can close the application, restart it and log in again.
+
+Actual result: The previously registered account remained available and login succeeded.
+
+Status: Passed.
+
+**Test 4: Chat Integration**
+
+Expected result: Successful login opens the chat interface linked to the authenticated account.
+
+Actual result: The chat interface opened and was linked to the logged-in user.
+
+Status: Passed.
